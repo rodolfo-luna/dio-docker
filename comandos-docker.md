@@ -2,6 +2,7 @@
 
 ## Executando um contêiner
 
+'''
 docker pull ubuntu
 docker run ubuntu
 docker run ubuntu sleep 10
@@ -9,6 +10,7 @@ docker run ubuntu sleep 1500
 docker stop [id]
 docker run --help
 docker run -it ubuntu
+'''
 
 ## Executando aplicações no contêiner
 
