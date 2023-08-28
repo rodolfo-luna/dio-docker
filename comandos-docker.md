@@ -14,35 +14,46 @@ docker run -it ubuntu
 
 ## Executando aplicações no contêiner
 
+```
 docker run -dti  ubuntu 
 docker exec -it [id ou nome]  /bin/bash
+```
 
 ## Excluindo e nomeando contêineres
 
+```
 docker stop [id]
 docker rm [id]
 docker rmi [imagem]
 
 docker run -dti --name Ubuntu-A ubuntu
+```
 
 ## Copiando arquivos para o contêiner
 
+```
 docker exec -ti Ubuntu-A /bin/bash
 docker exec Ubuntu-A mkdir /destino/
 docker exec Ubuntu-A mkdir ls -l /
 nano Arquivo.txt
 docker cp arquivo.txt Ubuntu-A:/aula/
+```
 
 ## Copiando arquivos do container
 
+```
 docker cp Ubuntu-A:/destino/Meuzip.zip  Zipcopia.zip
+```
 
 ## Criando um contêiner do MySQL
 
+```
 docker cp Ubuntu-A:/destino/Meuzip.zip  Zipcopia.zip
+```
 
 ## Acessando um container externamente
 
+```
 docker pull mysql
  
 docker run -e MYSQL_ROOT_PASSWORD=Senha123 --name mysql-A -d -p 3306:3306 mysql
@@ -65,6 +76,7 @@ mysql -u root -p --protocol=tcp
 docker run -e MYSQL_ROOT_PASSWORD=Senha123 --name mysql-A -d -p 3306:3306 --volume=/data:/var/lib/mysql mysql
 
 mysql -u root -p --protocol=tcp --port=3306
+```
 
 ```
 CREATE TABLE alunos (
@@ -77,20 +89,23 @@ CREATE TABLE alunos (
 ```
 
 
-
+```
 INSERT INTO alunos (AlunoID, Nome, Sobrenome, Endereco, Cidade) VALUES (1, 'Carlos Alberto', 'da Silva', 'Av. que sobe e desce que ninguém conhece', 'Manaus');
+```
 
 
 ## Exemplos de tipos de mount
 
 ****bind mount *****
-
+```
 docker run -dti --mount type=bind,src=/opt/teste,dst=/teste debian
 
 docker run -dti --mount type=bind,src=/opt/teste,dst=/teste,ro debian
+```
 
 ***volumes****
 
+```
 docker volume create teste
 
 docker volume ls
@@ -100,13 +115,15 @@ docker volume ls
 docker run -dti --mount type=volume,src=teste,dst=teste debian
 
 docker volume rm teste
+```
 
 ## Apache container
 
+```
 docker run  --name apache-A -d -p 80:80 --volume=/data/apache-A:/usr/local/apache2/htdocs/ httpd
 
 docker run  --name php-A -d -p 8080:80 --volume=/data/php-A:/var/www/html php:7.4-apache
-
+```
 
 
 ```
@@ -132,6 +149,7 @@ phpinfo();
 
 ## Limitando memória e CPU
 
+```
 docker stats php-A
 
 #docker update php-A -m 128M --cpus 0.2
@@ -141,17 +159,20 @@ docker run --name ubuntu-C -dti -m 128M --cpus 0.2 ubuntu
 apt update && apt install stress
 
 stress --cpu 1 --vm-bytes 50m --vm 1 --vm-bytes 50m
-
+```
 
 ## Redes
 
+```
 apt-get install iputils-ping
 
 docker network create minha-rede
 
 docker run -dit --name Ubuntu-B --network minha-rede  ubuntu
+```
 
 ## Primeiro Dockerfile
+```
  docker run -dti --name ubuntu-python ubuntu
 
  docker exec -ti ubuntu-python bash
@@ -179,11 +200,11 @@ CMD python3 /opt/app.py
 docker build . -t python-ubuntu
 
 dc
-
+```
 
 ## Criando uma imagem personzalizada do Apache
 
-
+```
 wget http://site1368633667.hospedagemdesites.ws/site1.zip
 
 Dockerfile
@@ -206,13 +227,15 @@ EXPOSE 80
 ENTRYPOINT ["/usr/sbin/apachectl"]
 
 CMD ["-D", "FOREGROUND"]
-
+```
 
 ======================
 
+```
 docker image build -t debian-apache:1.0 .
 
 docker run  -dti -p 80:80 --name meu-apache debian-apache:1.0
+```
 
 
 ## Criando imagens personalizadas a partir de imagens de linguagens de programacao
@@ -225,6 +248,7 @@ nome = input("Qual é o seu nome? ")
 
 =====================================
 
+```
 FROM python
 
 WORKDIR /usr/src/app
@@ -232,13 +256,15 @@ WORKDIR /usr/src/app
 COPY app.py /usr/src/app
 
 CMD [ "python", "./app.py" ]
-
+```
 
 ## Criando uma imagem multistage
 
+```
 docker pull golang
 
 docker pull alpine
+```
 
 ============================================================
 
@@ -259,6 +285,7 @@ func main() {
 
 =============================================================
 
+```
 FROM golang as exec
 
 COPY app.go /go/src/app/
@@ -278,25 +305,31 @@ COPY --from=exec /go/src/app/ /appexec
 RUN chmod -R 755 /appexec
 
 ENTRYPOINT ./app.go
+```
 
 ==============================================================
 
+```
 docker image build -t app-go:1.0 .
 
 docker run -ti  app-go:1.0
+```
 
 
 ## Realizando o upload de imagens para o hub do Docker
 
+```
 docker login
 
 docker build . -t nome-de-usuário/my-go=app:1.0
 
 docker push nome-deu-usuário/my-go=app:1.0
+```
 
 
 ## Registry, criando um servidor de imagens
 
+```
 docker run -d -p 5000:5000 --restart=always --name registry registry:2
 
 docker logout
@@ -311,15 +344,17 @@ docker push  localhost:5000/my-go-app:1.0
 
 
 nano /etc/docker/daemon.json
+```
 
 ```
 	{ "insecure-registries":["10.0.0.189:5000"] }
 ```	
 
+```
 systemctl restart docker
 
 docker push  localhost:5000/my-go-app:1.0
-
+```
 
 ## Docker compose exemplo pratico
 
@@ -373,8 +408,9 @@ networks:
     driver: bridge
 ```    
 
+```
 docker-compose up -d
-
+```
 
 ## Exemplo PHP-APACHE-MYSQL
 
@@ -434,7 +470,8 @@ networks:
  uploads.ini
  
 =============================================================
- 
+
+ ```
 file_uploads = On
 
 memory_limit = 500M
@@ -450,6 +487,7 @@ max_file_uploads = 50000
 max_execution_time = 5000
 
 max_input_time = 5000
+```
 
 =============================================================
 
