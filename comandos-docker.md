@@ -31,6 +31,7 @@ docker run -dti --name Ubuntu-A ubuntu
 
 ## Copiando arquivos para o contêiner
 
+
 ```
 docker exec -ti Ubuntu-A /bin/bash
 docker exec Ubuntu-A mkdir /destino/
